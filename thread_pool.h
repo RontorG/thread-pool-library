@@ -3,9 +3,24 @@
 
 #include <pthread.h>
 
+typedef struct __tpool_task_t {
+	struct __tpool_task_t *next;
+	void (*function)(void *);
+	void *arg;
+} tpool_task_t;
+
+
+typedef struct __tpool_task_queue_t {
+	int ntasks;
+	struct __tpool_task_t *head;
+	struct __tpool_task_t *tail;
+} tpool_task_queue_t;
+
+
 typedef struct __tpool_worker_t {
 	pthread_t tid;
 	struct __tpool_worker_t *next;
+	struct __tpool_task_t task;
 } tpool_worker_t;
 
 
