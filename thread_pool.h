@@ -33,4 +33,7 @@ typedef struct __tpool_t {
 } tpool_t;
 
 
+int tpool_init(size_t nthreads);
+int tpool_add_task(tpool_task_t task);
+
 #endif
