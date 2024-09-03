@@ -5,16 +5,16 @@
 
 typedef struct __tpool_worker_t {
 	pthread_t tid;
-	pthread_mutex_t mutex;
-	pthread_cond_t cond;
 	struct __tpool_worker_t *next;
 } tpool_worker_t;
 
 
 typedef struct __tpool_t {
-	int nthreads;
+	int nworkers;
 	struct __tpool_worker_t *head;
 	struct __tpool_worker_t *tail;
+	pthread_mutex_t mutex;
+	pthread_cond_t cond;
 } tpool_t;
 
 
