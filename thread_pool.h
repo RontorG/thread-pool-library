@@ -12,6 +12,8 @@ typedef struct __tpool_task_t {
 
 typedef struct __tpool_task_queue_t {
 	int ntasks;
+	int head;
+	int tail;
 	struct __tpool_task_t task;
 } tpool_task_queue_t;
 
