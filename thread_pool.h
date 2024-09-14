@@ -14,7 +14,7 @@ typedef struct __tpool_task_queue_t {
 	int ntasks;
 	int head;
 	int tail;
-	struct __tpool_task_t task;
+	struct __tpool_task_t *task;
 } tpool_task_queue_t;
 
 
@@ -35,8 +35,8 @@ typedef struct __tpool_t {
 } tpool_t;
 
 
-int tpool_init(tpool_t *tp, size_t nthreads);
+int tpool_init(tpool_t *tp, int nthreads);
 void *tpool_worker_wait();
-int tpool_add_task(tpool_task_t task);
+int tpool_add_task(tpool_t *tp, void(*func)(void*), void* arg);
 
 #endif
