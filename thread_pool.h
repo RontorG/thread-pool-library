@@ -4,14 +4,14 @@
 #include <pthread.h>
 
 typedef struct __tpool_task_t {
-	struct __tpool_task_t *next;
 	void (*function)(void *);
 	void *arg;
 } tpool_task_t;
 
 
 typedef struct __tpool_task_queue_t {
-	int ntasks;
+	int size;
+	int todo;
 	int head;
 	int tail;
 	struct __tpool_task_t *task;
@@ -38,6 +38,8 @@ typedef struct __tpool_t {
 
 int tpool_init(tpool_t *tp, int nthreads, int ntasks);
 void *tpool_worker_wait();
-int tpool_add_task(tpool_t *tp, void(*func)(void*), void* arg);
+int tpool_task_add(tpool_t *tp, void(*func)(void*), void* arg);
+int tpool_task_isfull(tpool_t *tp);
+int tpool_task_isempty(tpool_t *tp);
 
 #endif
