@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "thread_pool.h"
 
-int tpool_init(tpool_t *tp, size_t nthreads)
+int tpool_init(tpool_t *tp, int nthreads, int ntasks)
 {
 	pthread_mutex_init(&tp->mutex, NULL);
 	pthread_cond_init(&tp->cond, NULL);
@@ -15,6 +15,10 @@ int tpool_init(tpool_t *tp, size_t nthreads)
 			exit(EXIT_FAILURE);
 		}
 	}
+
+	tp->tasks.task = malloc(sizeof(*tp->tasks.task) * ntasks);
+	tp->tasks.head = 0;
+	tp->tasks.tail = 0;
 
 	tp->head = 0;
 	tp->tail = nthreads - 1;
