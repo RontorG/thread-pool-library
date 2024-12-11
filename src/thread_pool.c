@@ -1,3 +1,4 @@
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "thread_pool.h"
@@ -8,6 +9,7 @@ int tpool_init(tpool_t *tp, int nthreads, int ntasks)
 	pthread_cond_init(&tp->cond, NULL);
 
 	tp->workers = malloc(sizeof(*tp->workers) * nthreads);
+	tp->nworkers = nthreads;
 
 	for (int i = 0; i < nthreads; i++) {
 		if (pthread_create(&tp->workers[i].tid, NULL, (void *)tpool_worker_instance, NULL) != 0) {
@@ -27,6 +29,20 @@ int tpool_init(tpool_t *tp, int nthreads, int ntasks)
 	return 0;
 }
 
+int tpool_destroy(tpool_t *tp)
+{
+	pthread_mutex_destroy(&tp->mutex);
+	pthread_cond_destroy(&tp->cond);
+
+	pthread_cond_broadcast(&tp->cond);
+
+	for (int i = 0; i < tp->nworkers; i++) {
+		if (pthread_join(tp->workers[i].tid, NULL) < 0)
+			return -1;
+	}
+
+	return 0;
+}
 
 int tpool_task_add(tpool_t *tp, void(*func)(void*), void* arg)
 {
