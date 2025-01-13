@@ -1,9 +1,12 @@
+// This test should count til COUNT in NTHREADS.
+
 #include <stdio.h>
 #include <unistd.h>
 #include "thread_pool.h"
 
-#define NTHREADS 4
+#define NTHREADS 2
 #define NTASKS 10
+#define COUNT 3
 
 
 struct args {
@@ -20,7 +23,6 @@ void count(void *args)
 		sleep(1);
 	}
 
-
 	printf("thread %d:\tDone!\n", data->thread_num);
 }
 
@@ -34,7 +36,7 @@ int main()
 
 	// Insert tasks in the pool
 	for (int i = 0; i < NTASKS; i++) {
-		fargs[i].num = 5;
+		fargs[i].num = COUNT;
 		fargs[i].thread_num = tp.head;
 		tpool_task_add(&tp, &count, &fargs);
 	}
